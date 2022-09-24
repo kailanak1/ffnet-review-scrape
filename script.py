@@ -7,7 +7,7 @@ import re
 
 wd = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
 
-URL = ''
+URL = 'https://www.fanfiction.net/r/3767746/'
 wd.get(URL)
 
 try:
@@ -18,6 +18,7 @@ try:
     page = Soup(html_page,'html.parser')
     # get titles
     title = page.find(class_='thead').get_text()
+
     # get reviews
     reviews_table = page.find(class_='table-striped').tbody
     reviews_tds = reviews_table.find_all('td')
@@ -30,13 +31,14 @@ try:
             user_id = None
         time = review_td.find('span', attrs={'data-xutime': True})
         time = int(time['data-xutime'])
+        chapter = review_td.find('small').get_text()
         review = {
             'time': time,
+            'chapter & date': chapter,
             'user_id': user_id,
             'text': review_td.div.text.encode('utf8')
         }
         reviews.append(review)
     print(title, reviews)
-
 finally:
     wd.quit()
