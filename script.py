@@ -4,6 +4,7 @@ from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.by import By
 from bs4 import BeautifulSoup as Soup
+import lxml
 import re
 
 
@@ -32,14 +33,14 @@ try:
             user_name = str(match.groups()[1])
         else:
             user_id = None
-            user_name = 'guest user'
-            # user_name = review_td.find_element(By.XPATH, '//*[@id="gui_table1i"]/tbody/tr[10]/td/text()')
+            user_name = str(review_td.find('small').previous_sibling)
         time = review_td.find('span', attrs={'data-xutime': True})
         time = int(time['data-xutime'])
-        chapter = review_td.find('small').get_text()
+        chapter_and_date = review_td.find('small').get_text()
         review = {
             'time': time,
-            'chapter & date': chapter,
+            'chapter': chapter_and_date.split('.')[0],
+            'date': chapter_and_date.split('.')[1],
             'user_name': user_name,
             'user_id': user_id,
             'text': review_td.div.text.encode('utf8')
