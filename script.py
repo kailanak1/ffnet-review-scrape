@@ -9,7 +9,7 @@ import re
 
 wd = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
 
-URL = 'https://www.fanfiction.net/r/3767746/'
+URL = ' '
 wd.get(URL)
 
 try:
