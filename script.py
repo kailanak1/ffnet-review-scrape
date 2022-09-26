@@ -1,33 +1,38 @@
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
-from selenium.webdriver.support.ui import WebDriverWait
 from bs4 import BeautifulSoup as Soup
 import re
-import time 
+from random import randint
+import time
+
+
+
+
+reviews = []
 
 
 def scrape_page(url):
+    wait_time = randint(2, 5)
+    time.sleep(wait_time)
     wd = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
     wd.get(url)
     try:
         # check if the site loads
-        wait = WebDriverWait(wd,20)
         html_page = wd.page_source
         # parse the site
-        page = Soup(html_page,'html.parser')
-        return page
+        soup = Soup(html_page, 'html.parser')
+        return soup
     finally:
         wd.quit()
 
 
 # get reviews
-def get_reviews(page):
+def get_reviews(soup):
     # get title
-    title = page.find(class_='thead').get_text()
-    reviews_table = page.find(class_='table-striped').tbody
+    title = soup.find(class_='thead').get_text()
+    reviews_table = soup.find(class_='table-striped').tbody
     reviews_tds = reviews_table.find_all('td')
-    reviews = []
     for review_td in reviews_tds:
         match = re.search(r'href="/u/(.*)/.*">(.*)</a>', str(review_td))
         if match is not None:
@@ -36,11 +41,11 @@ def get_reviews(page):
         else:
             user_id = None
             user_name = str(review_td.find('small').previous_sibling)
-        time = review_td.find('span', attrs={'data-xutime': True})
-        time = int(time['data-xutime'])
+        u_time = review_td.find('span', attrs={'data-xutime': True})
+        u_time = int(u_time['data-xutime'])
         chapter_and_date = review_td.find('small').get_text()
         review = {
-            'time': time,
+            'time': u_time,
             'chapter': chapter_and_date.split('.')[0],
             'date': chapter_and_date.split('.')[1],
             'user_name': user_name,
@@ -53,4 +58,13 @@ def get_reviews(page):
 
 def scrape_reviews(url):
     get_reviews(scrape_page(url))
+
+
+scrape_reviews('')
+
+
+
+
+
+
 
