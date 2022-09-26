@@ -6,9 +6,6 @@ import re
 from random import randint
 import time
 
-
-
-
 reviews = []
 
 
@@ -22,15 +19,13 @@ def scrape_page(url):
         html_page = wd.page_source
         # parse the site
         soup = Soup(html_page, 'html.parser')
-        return soup
+        get_reviews(soup)
     finally:
         wd.quit()
 
 
 # get reviews
 def get_reviews(soup):
-    # get title
-    title = soup.find(class_='thead').get_text()
     reviews_table = soup.find(class_='table-striped').tbody
     reviews_tds = reviews_table.find_all('td')
     for review_td in reviews_tds:
@@ -53,14 +48,22 @@ def get_reviews(soup):
             'text': review_td.div.text.encode('utf8')
         }
         reviews.append(review)
-    print(title, reviews)
+    center = soup.find('center')
+    if center:
+        root_url = 'https://www.fanfiction.net'
+        if 'b' in str(center.contents[-1]):
+            # designed for multi-page reviews
+            print(reviews)
+        else:
+            next_page = center.b.next_sibling.next_sibling.get('href')
+            scrape_page(root_url + next_page)
+    else:
+        # designed for single page reviews
+        print(reviews)
 
 
-def scrape_reviews(url):
-    get_reviews(scrape_page(url))
 
-
-scrape_reviews('')
+scrape_page(' ')
 
 
 
