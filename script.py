@@ -2,27 +2,29 @@ from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.common.by import By
 from bs4 import BeautifulSoup as Soup
-import lxml
 import re
+import time 
 
 
-wd = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
+def scrape_page(url):
+    wd = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
+    wd.get(url)
+    try:
+        # check if the site loads
+        wait = WebDriverWait(wd,20)
+        html_page = wd.page_source
+        # parse the site
+        page = Soup(html_page,'html.parser')
+        return page
+    finally:
+        wd.quit()
 
-URL = ' '
-wd.get(URL)
 
-try:
-    # check if the site loads
-    wait = WebDriverWait(wd,20)
-    html_page = wd.page_source
-    # parse the site
-    page = Soup(html_page,'html.parser')
-    # get titles
+# get reviews
+def get_reviews(page):
+    # get title
     title = page.find(class_='thead').get_text()
-
-    # get reviews
     reviews_table = page.find(class_='table-striped').tbody
     reviews_tds = reviews_table.find_all('td')
     reviews = []
@@ -47,5 +49,8 @@ try:
         }
         reviews.append(review)
     print(title, reviews)
-finally:
-    wd.quit()
+
+
+def scrape_reviews(url):
+    get_reviews(scrape_page(url))
+
