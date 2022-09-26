@@ -49,21 +49,23 @@ def get_reviews(soup):
         }
         reviews.append(review)
     center = soup.find('center')
+    title = soup.find(class_='thead')
     if center:
         root_url = 'https://www.fanfiction.net'
         if 'b' in str(center.contents[-1]):
             # designed for multi-page reviews
-            print(reviews)
+            title = title.find_all('a')[-1].get_text()
+            print('Reviews for', title, reviews)
         else:
             next_page = center.b.next_sibling.next_sibling.get('href')
             scrape_page(root_url + next_page)
     else:
         # designed for single page reviews
-        print(reviews)
+        print(title, reviews)
 
 
 
-scrape_page(' ')
+scrape_page('')
 
 
 
