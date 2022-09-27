@@ -44,11 +44,10 @@ def get_reviews(soup):
         }
         reviews.append(review)
     center = soup.find('center')
-    title = soup.find(class_='thead')
+    thead = soup.find(class_='thead')
+    title = thead.find_all('a')[-1].get_text()
     if center:
         if 'b' in str(center.contents[-1]):
-            title = title.find_all('a')[-1].get_text()
-            title = f'Reviews for {title}'
             # return(title, reviews)
             create_txt_file(title, reviews)
         else:
@@ -57,12 +56,11 @@ def get_reviews(soup):
             scrape_page(root_url + next_page)
     else:
         # return(title, reviews)
-        title = title.get_text()
         create_txt_file(title, reviews)
 
 
 def create_txt_file(title, reviews):
-    with open(f'{title}.txt', 'w') as f:
+    with open(f'Reviews for {title}.txt', 'w') as f:
         for review in reviews:
             review_text = str(review["text"]).replace('b', '', 1)
             f.write(f'Chapter: {review["chapter"]}\n')
@@ -72,5 +70,4 @@ def create_txt_file(title, reviews):
             f.write(f'Review: {review_text}\n\n')
 
 
-scrape_page(' ')
-
+scrape_page('')
