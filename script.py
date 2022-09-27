@@ -19,9 +19,9 @@ def scrape_page(url):
         html_page = wd.page_source
         # parse the site
         soup = Soup(html_page, 'html.parser')
-        get_reviews(soup)
     finally:
         wd.quit()
+        get_reviews(soup)
 
 
 # get reviews
@@ -55,17 +55,24 @@ def get_reviews(soup):
         if 'b' in str(center.contents[-1]):
             # designed for multi-page reviews
             title = title.find_all('a')[-1].get_text()
-            print('Reviews for', title, reviews)
+            # return(title, reviews)
+            create_txt_file(title, reviews)
         else:
             next_page = center.b.next_sibling.next_sibling.get('href')
             scrape_page(root_url + next_page)
     else:
-        # designed for single page reviews
-        print(title, reviews)
+        # return(title, reviews)
+        create_txt_file(title, reviews)
 
 
+def create_txt_file(title, reviews):
+    with open(f'{title}.txt', 'w') as f:
+        for review in reviews:
+            f.write(str(review))
+            f.write('\n')
 
-scrape_page('')
+
+scrape_page(' ')
 
 
 
