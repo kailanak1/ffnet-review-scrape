@@ -15,9 +15,7 @@ def scrape_page(url):
     wd = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
     wd.get(url)
     try:
-        # check if the site loads
         html_page = wd.page_source
-        # parse the site
         soup = Soup(html_page, 'html.parser')
     finally:
         wd.quit()
@@ -50,6 +48,7 @@ def get_reviews(soup):
     if center:
         if 'b' in str(center.contents[-1]):
             title = title.find_all('a')[-1].get_text()
+            title = f'Reviews for {title}'
             # return(title, reviews)
             create_txt_file(title, reviews)
         else:
@@ -66,17 +65,11 @@ def create_txt_file(title, reviews):
     with open(f'{title}.txt', 'w') as f:
         for review in reviews:
             review_text = str(review["text"]).replace('b', '', 1)
-            f.write(f'Chapter: {review["chapter"]}')
-            f.write('\n')
-            f.write(f'Date: {review["date"]}')
-            f.write('\n')
-            f.write(f'Username: {review["user_name"]}')
-            f.write('\n')
-            f.write(f'User ID: {review["user_id"]}')
-            f.write('\n')
-            f.write(f'Review: {review_text}')
-            f.write('\n')
-            f.write('\n')
+            f.write(f'Chapter: {review["chapter"]}\n')
+            f.write(f'Date: {review["date"]}\n')
+            f.write(f'Username: {review["user_name"]}\n')
+            f.write(f'User ID: {review["user_id"]}\n')
+            f.write(f'Review: {review_text}\n\n')
 
 
 scrape_page(' ')
