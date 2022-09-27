@@ -50,7 +50,6 @@ def get_reviews(soup):
     if center:
         root_url = 'https://www.fanfiction.net'
         if 'b' in str(center.contents[-1]):
-            # designed for multi-page reviews
             title = title.find_all('a')[-1].get_text()
             # return(title, reviews)
             create_txt_file(title, reviews)
@@ -59,8 +58,8 @@ def get_reviews(soup):
             scrape_page(root_url + next_page)
     else:
         # return(title, reviews)
-        for review in reviews:
-            create_txt_file(title, reviews)
+        title = title.get_text()
+        create_txt_file(title, reviews)
 
 
 def create_txt_file(title, reviews):
@@ -79,9 +78,7 @@ def create_txt_file(title, reviews):
             f.write('\n')
 
 
-scrape_page('<your review url here>')
-
-
+scrape_page(' ')
 
 
 
