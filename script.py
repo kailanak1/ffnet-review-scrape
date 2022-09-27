@@ -36,11 +36,8 @@ def get_reviews(soup):
         else:
             user_id = None
             user_name = str(review_td.find('small').previous_sibling)
-        u_time = review_td.find('span', attrs={'data-xutime': True})
-        u_time = int(u_time['data-xutime'])
         chapter_and_date = review_td.find('small').get_text()
         review = {
-            'time': u_time,
             'chapter': chapter_and_date.split('.')[0],
             'date': chapter_and_date.split('.')[1],
             'user_name': user_name,
@@ -62,17 +59,29 @@ def get_reviews(soup):
             scrape_page(root_url + next_page)
     else:
         # return(title, reviews)
-        create_txt_file(title, reviews)
+        for review in reviews:
+            create_txt_file(title, reviews)
 
 
 def create_txt_file(title, reviews):
     with open(f'{title}.txt', 'w') as f:
         for review in reviews:
-            f.write(str(review))
+            f.write(f'Chapter: {review["chapter"]}')
+            f.write('\n')
+            f.write(f'Date: {review["date"]}')
+            f.write('\n')
+            f.write(f'Username: {review["user_name"]}')
+            f.write('\n')
+            f.write(f'User ID: {review["user_id"]}')
+            f.write('\n')
+            f.write(f'Review: {review["text"]}')
+            f.write('\n')
             f.write('\n')
 
 
-scrape_page(' ')
+scrape_page('<your review url here>')
+
+
 
 
 
