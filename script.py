@@ -48,12 +48,12 @@ def get_reviews(soup):
     center = soup.find('center')
     title = soup.find(class_='thead')
     if center:
-        root_url = 'https://www.fanfiction.net'
         if 'b' in str(center.contents[-1]):
             title = title.find_all('a')[-1].get_text()
             # return(title, reviews)
             create_txt_file(title, reviews)
         else:
+            root_url = 'https://www.fanfiction.net'
             next_page = center.b.next_sibling.next_sibling.get('href')
             scrape_page(root_url + next_page)
     else:
@@ -65,6 +65,7 @@ def get_reviews(soup):
 def create_txt_file(title, reviews):
     with open(f'{title}.txt', 'w') as f:
         for review in reviews:
+            review_text = str(review["text"]).replace('b', '', 1)
             f.write(f'Chapter: {review["chapter"]}')
             f.write('\n')
             f.write(f'Date: {review["date"]}')
@@ -73,16 +74,10 @@ def create_txt_file(title, reviews):
             f.write('\n')
             f.write(f'User ID: {review["user_id"]}')
             f.write('\n')
-            f.write(f'Review: {review["text"]}')
+            f.write(f'Review: {review_text}')
             f.write('\n')
             f.write('\n')
 
 
 scrape_page(' ')
-
-
-
-
-
-
 
