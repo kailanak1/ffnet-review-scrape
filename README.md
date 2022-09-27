@@ -8,7 +8,7 @@ I am not affiliated with fanfiction.net.
 
 1. Fork and clone 
 2. Install the necessary packages. You may need to install web-driver manually. 
-3. Under the URL variable, use the first page of the fanfiction.net review url. It will looks something like ```https://www.fanfiction.net/r/<story_id>/``` or ```https://www.fanfiction.net/r/<story_id>/0/1```.
+3. Under the URL variable, use the first page of the fanfiction.net review url. It will look something like ```https://www.fanfiction.net/r/<story_id>/``` or ```https://www.fanfiction.net/r/<story_id>/0/1```.
 4. Reviews will output to the console in an object. 
 
 ## Limitations 
