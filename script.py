@@ -30,15 +30,15 @@ def get_reviews(soup):
         match = re.search(r'href="/u/(.*)/.*">(.*)</a>', str(review_td))
         if match is not None:
             user_id = int(match.groups()[0])
-            user_name = str(match.groups()[1])
+            # user_name = str(match.groups()[1])
         else:
             user_id = None
-            user_name = str(review_td.find('small').previous_sibling)
+            # user_name = str(review_td.find('small').previous_sibling)
         chapter_and_date = review_td.find('small').get_text()
         review = {
             'chapter': chapter_and_date.split('.')[0],
             'date': chapter_and_date.split('.')[1],
-            'user_name': user_name,
+            # 'user_name': user_name,
             'user_id': user_id,
             'text': review_td.div.text.encode('utf8')
         }
@@ -65,7 +65,7 @@ def create_txt_file(title, reviews):
             review_text = str(review["text"]).replace('b', '', 1)
             f.write(f'Chapter: {review["chapter"]}\n')
             f.write(f'Date: {review["date"]}\n')
-            f.write(f'Username: {review["user_name"]}\n')
+            # f.write(f'Username: {review["user_name"]}\n')
             f.write(f'User ID: {review["user_id"]}\n')
             f.write(f'Review: {review_text}\n\n')
 
