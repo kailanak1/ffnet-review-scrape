@@ -3,15 +3,13 @@ from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
 from bs4 import BeautifulSoup as Soup
 import re
-from random import randint
 import time
 
 reviews = []
 
 
 def scrape_page(url):
-    wait_time = randint(2, 5)
-    time.sleep(wait_time)
+    time.sleep(5)
     wd = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
     wd.get(url)
     try:
